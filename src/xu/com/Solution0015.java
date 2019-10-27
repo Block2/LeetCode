@@ -34,7 +34,7 @@ public class Solution0015 {
 	 * @param nums
 	 * @return
 	 */
-	//解法1
+	// 解法1
 	public List<List<Integer>> threeSum1(int[] nums) {
 
 		Map<Integer, Integer> map = new HashMap<Integer, Integer>();
@@ -67,15 +67,15 @@ public class Solution0015 {
 		}
 
 		Iterator<List<Integer>> iter = set.iterator();
-		while(iter.hasNext()) {
+		while (iter.hasNext()) {
 			List<Integer> item = iter.next();
 			result.add(item);
 		}
 		return result;
 	}
 
-	//解法二
-	public List<List<Integer>> threeSum(int[] nums) {
+	// 解法二
+	public List<List<Integer>> threeSum2(int[] nums) {
 
 		List<List<Integer>> result = new ArrayList<List<Integer>>();
 
@@ -97,8 +97,8 @@ public class Solution0015 {
 			else
 				negList.add(num);
 		}
-		
-		if(numTimesMap.containsKey(0) && numTimesMap.get(0) >= 3) {
+
+		if (numTimesMap.containsKey(0) && numTimesMap.get(0) >= 3) {
 			List<Integer> list = new ArrayList<Integer>();
 			list.add(0);
 			list.add(0);
@@ -111,26 +111,61 @@ public class Solution0015 {
 				int dif = 0 - pos - neg;
 
 				if (numTimesMap.containsKey(dif)) {
-					if ((dif == pos || dif == neg) && numTimesMap.get(dif) >= 2) {
+					if (((dif == pos || dif == neg) && numTimesMap.get(dif) >= 2) || (dif < neg || dif > pos)) {
 						List<Integer> list = new ArrayList<Integer>();
 						list.add(neg);
 						list.add(pos);
 						list.add(dif);
 						result.add(list);
-					} else {
-						if (dif < neg || dif > pos) {
-							List<Integer> list = new ArrayList<Integer>();
-							list.add(neg);
-							list.add(pos);
-							list.add(dif);
-							result.add(list);
-						}
 					}
 				}
-
 			}
 		}
 
+		return result;
+	}
+
+//解法3：双指针
+	public List<List<Integer>> threeSum(int[] nums) {
+		
+		List<List<Integer>> result = new ArrayList<List<Integer>>();
+        if (nums.length < 3)
+			return result;
+
+		Arrays.sort(nums);
+		
+		for (int k = 0; k < nums.length-2; k++) {
+
+			if (nums[k] > 0)
+				return result;
+			if (k > 0 && nums[k] == nums[k - 1])
+				continue;
+			int i = k + 1;
+			int j = nums.length - 1;
+			while (i < j) {
+				int sum = nums[k] + nums[i] + nums[j];
+				if (sum > 0) {
+					j--;
+				} else if (sum < 0) {
+					i++;
+				} else {
+					List<Integer> list = new ArrayList<Integer>();
+					list.add(nums[k]);
+					list.add(nums[i]);
+					list.add(nums[j]);
+					result.add(list);
+                    while(i<j && nums[i] == nums[i+1]){
+                        i++;
+                    }
+                    
+                    while(i<j && nums[j] == nums[j-1]){
+                        j--;
+                    }
+					i++;
+					j--;
+				}
+			}
+		}
 		return result;
 	}
 
