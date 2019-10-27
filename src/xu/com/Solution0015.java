@@ -26,7 +26,7 @@ import java.util.Map;
 */
 
 public class Solution0015 {
-	
+
 	/**
 	 * @Desc 时间复杂度O(n^2)
 	 * 
@@ -34,8 +34,8 @@ public class Solution0015 {
 	 * @param nums
 	 * @return
 	 */
-
-	public List<List<Integer>> threeSum(int[] nums) {
+	//解法1
+	public List<List<Integer>> threeSum1(int[] nums) {
 
 		Map<Integer, Integer> map = new HashMap<Integer, Integer>();
 		List<List<Integer>> result = new ArrayList<List<Integer>>();
@@ -74,9 +74,69 @@ public class Solution0015 {
 		return result;
 	}
 
+	//解法二
+	public List<List<Integer>> threeSum(int[] nums) {
+
+		List<List<Integer>> result = new ArrayList<List<Integer>>();
+
+		HashMap<Integer, Integer> numTimesMap = new HashMap<Integer, Integer>();
+
+		for (int i = 0; i < nums.length; i++) {
+			if (numTimesMap.containsKey(nums[i])) {
+				numTimesMap.put(nums[i], numTimesMap.get(nums[i]) + 1);
+			} else {
+				numTimesMap.put(nums[i], 1);
+			}
+		}
+
+		List<Integer> posList = new ArrayList<Integer>();
+		List<Integer> negList = new ArrayList<Integer>();
+		for (Integer num : numTimesMap.keySet()) {
+			if (num >= 0)
+				posList.add(num);
+			else
+				negList.add(num);
+		}
+		
+		if(numTimesMap.containsKey(0) && numTimesMap.get(0) >= 3) {
+			List<Integer> list = new ArrayList<Integer>();
+			list.add(0);
+			list.add(0);
+			list.add(0);
+			result.add(list);
+		}
+
+		for (Integer neg : negList) {
+			for (Integer pos : posList) {
+				int dif = 0 - pos - neg;
+
+				if (numTimesMap.containsKey(dif)) {
+					if ((dif == pos || dif == neg) && numTimesMap.get(dif) >= 2) {
+						List<Integer> list = new ArrayList<Integer>();
+						list.add(neg);
+						list.add(pos);
+						list.add(dif);
+						result.add(list);
+					} else {
+						if (dif < neg || dif > pos) {
+							List<Integer> list = new ArrayList<Integer>();
+							list.add(neg);
+							list.add(pos);
+							list.add(dif);
+							result.add(list);
+						}
+					}
+				}
+
+			}
+		}
+
+		return result;
+	}
+
 	public static void main(String[] args) {
 
-		//nums = [-1, 0, 1, 2, -1, -4]，
+		// nums = [-1, 0, 1, 2, -1, -4]，
 		int[] nums = new int[] { -1, 0, 1, 2, -1, -4 };
 		Solution0015 so = new Solution0015();
 		so.threeSum(nums);
